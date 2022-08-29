@@ -41,8 +41,8 @@ AddEventHandler('aggressiveCommand', function(amount)
         -- randomize the position of the ped in the area around the player
         local x_ped = playerCoords.x + math.random(-25, 25)
         local y_ped = playerCoords.y + math.random(-25, 25)
-        -- set the z position of the ped to the ground
-        local z_ped = GetGroundZFor_3dCoord(x_ped, y_ped, playerCoords.z, 0) + 1.0
+        -- set the z position of the ped to spawn just above the ground
+        local z_ped = -200.0
         ped = CreatePed(4, model, x_ped, y_ped, z_ped, 0.0, true, false)
         SetPedCombatAttributes(ped, 46, 1) -- Set ped to always fight
         SetPedFleeAttributes(ped, 0, 0) -- Set ped to not flee
@@ -59,6 +59,7 @@ AddEventHandler('aggressiveCommand', function(amount)
         SetPedAiBlipHasCone(ped, false)
         -- Give the ped a random weapon and 999 ammos
         GiveWeaponToPed(ped, GetHashKey(weapons[math.random(#weapons)]), 999, false, true)
+        -- Citizen.Trace("Spawned ped " .. model .. " at " .. x_ped .. " " .. y_ped .. " " .. z_ped .. "\n")
     end
     -- Print a message to the player
     TriggerEvent('chatMessage', 'Aggressive-Ped', {255, 0, 0}, "Aggressive ped(s) spawned.")
