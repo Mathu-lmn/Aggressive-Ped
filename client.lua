@@ -1,7 +1,9 @@
 TriggerEvent( "chat:addSuggestion", "/aggressive", "Usage : /aggressive [number] Spawns aggressive ped(s) in the area" )
+TriggerEvent( "chat:addSuggestion", "/da", "Deletes all the peds spawned by the /aggressive command" )
 
 AddRelationshipGroup( "AGGRESSIVE")
 local ped = 0
+local peds = {}
 -- List of ped models that will randomly spawn when executing the command (you can add more)
 local models = {
 0xDB729238,
@@ -59,8 +61,17 @@ AddEventHandler('aggressiveCommand', function(amount)
         SetPedAiBlipHasCone(ped, false)
         -- Give the ped a random weapon and 999 ammos
         GiveWeaponToPed(ped, GetHashKey(weapons[math.random(#weapons)]), 999, false, true)
-        -- Citizen.Trace("Spawned ped " .. model .. " at " .. x_ped .. " " .. y_ped .. " " .. z_ped .. "\n")
+        -- Store the ped in a table so we can delete them later
+        table.insert(peds, ped)
     end
     -- Print a message to the player
     TriggerEvent('chatMessage', 'Aggressive-Ped', {255, 0, 0}, "Aggressive ped(s) spawned.")
-end)  
+end) 
+
+-- Create a command to delete all peds spawned by the command
+RegisterCommand("da", function(source, args)
+    for i in pairs(peds) do
+        DeletePed(peds[i])
+    end
+    TriggerEvent('chatMessage', 'Aggressive-Ped', {255, 0, 0}, "Aggressive ped(s) deleted.")
+end)
