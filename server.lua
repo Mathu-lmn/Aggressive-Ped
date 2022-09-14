@@ -1,4 +1,5 @@
 local cooldowns = {}
+local max = 10 -- you can set here the maximum amount of peds you want to allow people on your server to spawn
 
 RegisterCommand('aggressive', function(source, args)
     if (source > 0) then
@@ -11,9 +12,16 @@ RegisterCommand('aggressive', function(source, args)
                 args = {"Aggressive-Ped", "^7Usage: ^1/aggressive [number]"}
               })
             return
+        elseif tonumber(amount) > max then
+            TriggerClientEvent('chat:addMessage', source,{
+                color = { 255, 0, 0},
+                multiline = true,
+                args = {"Aggressive-Ped", "^7You can only spawn up to ^1" .. max .. " ^7peds."}
+              })
+            return
         end
 
-        if not cooldowns[source] or ((os.clock() - cooldowns[source]) > 60) then -- set a cooldown of 60 seconds to prevent spam
+        if not cooldowns[source] or ((os.clock() - cooldowns[source]) > 60) then -- set a cooldown of 60 seconds to prevent spamming
             cooldowns[source] = os.clock()
             TriggerClientEvent('aggressiveCommand', source, amount)
         
